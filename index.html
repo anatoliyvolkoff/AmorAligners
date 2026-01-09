@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#6a11cb">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <title>Элайнер-трекер 💎</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="manifest" href="manifest.json">
+    <link rel="apple-touch-icon" href="icons/icon-192.png">
+    <link rel="icon" type="image/png" href="icons/icon-192.png">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+    <!-- Весь HTML код из предыдущего сообщения -->
+    <!-- ... -->
+    
+    <script src="script.js"></script>
+    <script>
+        // Service Worker регистрация - ОБЯЗАТЕЛЬНО с абсолютным путем
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', function() {
+                const basePath = window.location.pathname.includes('/eligner-tracker/') 
+                    ? '/eligner-tracker/' 
+                    : '/';
+                
+                navigator.serviceWorker.register(basePath + 'service-worker.js')
+                    .then(reg => console.log('Service Worker зарегистрирован:', reg.scope))
+                    .catch(err => console.log('Ошибка регистрации:', err));
+            });
+        }
+        
+        // Автоматически показываем кнопку установки на iOS
+        if (window.navigator.standalone) {
+            console.log('Запущено в полноэкранном режиме iOS');
+        }
+        
+        // Определение iOS
+        const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
+        if (isIOS) {
+            document.addEventListener('DOMContentLoaded', function() {
+                const installHint = document.createElement('div');
+                installHint.className = 'ios-install-hint';
+                installHint.innerHTML = `
+                    <div style="background: #f0f8ff; padding: 15px; border-radius: 10px; margin: 15px; text-align: center; border: 2px solid #6a11cb;">
+                        <h3><i class="fas fa-mobile-alt"></i> Установите на iPhone:</h3>
+                        <p>1. Нажмите <i class="fas fa-share"></i></p>
+                        <p>2. Выберите "На экран «Домой»"</p>
+                        <p>3. Нажмите "Добавить"</p>
+                        <button onclick="this.parentElement.style.display='none'" style="margin-top: 10px; padding: 8px 20px; background: #6a11cb; color: white; border: none; border-radius: 20px;">
+                            Понятно
+                        </button>
+                    </div>
+                `;
+                document.querySelector('.container').prepend(installHint);
+            });
+        }
+    </script>
+</body>
+</html>
